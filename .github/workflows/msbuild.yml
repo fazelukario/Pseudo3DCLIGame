@@ -41,11 +41,13 @@ jobs:
       # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
       run: msbuild /m /p:Configuration=${{ matrix.configuration }} /p:Platform=${{ matrix.platform }} /p:PlatformToolset=${{ (matrix.os == 'windows-latest' || matrix.os == 'windows-2022') && '"v143"' || '"v142"' }} ${{ env.SOLUTION_FILE_PATH }}
 
+    - run: echo ghactionpath=${{ runner.temp }}
+    - run: ls
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v3
       with:
         # Artifact name
-        name: ${{ github.repository }}-build-${{ matrix.os }}-${{ matrix.configuration }}-${{ matrix.platform }}-${{ github.sha }} # optional, default is artifact
+        name: ${{ vars.REPOSITORY_NAME }}-build-${{ matrix.os }}-${{ matrix.configuration }}-${{ matrix.platform }}-${{ github.sha }} # optional, default is artifact
         
         # A file, directory or wildcard pattern that describes what to upload
         path: ${{ matrix.platform == 'x64' && 'x64\' || '' }}${{ matrix.configuration }}
