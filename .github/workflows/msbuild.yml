@@ -20,7 +20,7 @@ jobs:
       matrix:
         os: [windows-latest, windows-2022, windows-2019]
         configuration: [Release, Debug]
-        platform: [Win64, Win32]
+        platform: [x64, Win32]
     
     runs-on: ${{ matrix.os }}
 
