@@ -138,7 +138,6 @@ int main()
 						float bound = 0.005f;
 						if (acos(p.at(0).second) < bound) boundary = true;
 						if (acos(p.at(1).second) < bound) boundary = true;
-						if (acos(p.at(2).second) < bound) boundary = true;
 					}
 				}
 			}
