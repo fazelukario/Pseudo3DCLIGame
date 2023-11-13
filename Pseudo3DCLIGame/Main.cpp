@@ -189,6 +189,16 @@ int main()
 			}
 		}
 
+		// Display Map
+		for (int nx = 0; nx < MapWidth; nx++)
+		{
+			for (int ny = 0; ny < MapWidth; ny++)
+			{
+				screen[(ny + 1) * ScreenWidth + nx] = map[ny * MapWidth + nx];
+			}
+		}
+		screen[((int)PlayerX + 1) * ScreenWidth + (int)PlayerY] = 'P';
+
 		// Display Frame
 		screen[ScreenWidth * ScreenHeight - 1] = '\0';
 		WriteConsoleOutputCharacter(console, screen, ScreenWidth * ScreenHeight, { 0,0 }, &bytesWritten);
