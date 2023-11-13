@@ -189,6 +189,9 @@ int main()
 			}
 		}
 
+		// Display Stats
+		swprintf(screen, 40, L"X=%3.2f, Y=%3.2f, A=%3.2f FPS=%3.2f ", PlayerX, PlayerY, PlayerA, 1.0f / fElapsedTime);
+
 		// Display Map
 		for (int nx = 0; nx < MapWidth; nx++)
 		{
