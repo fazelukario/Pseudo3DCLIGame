@@ -8,6 +8,8 @@
 
 using namespace std;
 
+void UpdateConsoleSize();
+
 int ScreenWidth = 120;			// Console Screen Size X (columns)
 int ScreenHeight = 40;			// Console Screen Size Y (rows)
 int MapWidth = 16;				// World Dimensions
@@ -22,6 +24,8 @@ float Speed = 5.0f;				// Walking Speed
 
 int main()
 {
+	UpdateConsoleSize();
+
 	// Create Screen Buffer
 	wchar_t* screen = new wchar_t[ScreenWidth * ScreenHeight];
 	HANDLE console = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
@@ -207,4 +211,13 @@ int main()
 	}
 
 	return 0;
+}
+
+void UpdateConsoleSize()
+{
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+
+	GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+	ScreenWidth = csbi.srWindow.Right - csbi.srWindow.Left + 1;
+	ScreenHeight = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
 }
