@@ -10,8 +10,9 @@
 
 using namespace std;
 
-void UpdateConsoleSize();
+void UpdateConsoleSize();  // Function prototype for updating console size
 
+// Variables to define the initial state of the game and player
 int ScreenWidth = 120;			// Console Screen Size X (columns)
 int ScreenHeight = 40;			// Console Screen Size Y (rows)
 int MapWidth = 0;				// World Dimensions
@@ -29,9 +30,9 @@ int main()
 	string mapFileName;
 	cout << "Enter the name of the map file: ";
 	cin >> mapFileName;
-	system("cls");
+    system("cls");  // Clear the console
 
-	UpdateConsoleSize();
+    UpdateConsoleSize();  // Set initial console size
 
 	// Create Screen Buffer
 	wchar_t* screen = new wchar_t[ScreenWidth * ScreenHeight];
@@ -55,7 +56,7 @@ int main()
 	while (1)
 	{
 		// We'll need time differential per frame to calculate modification
-		// to movement speeds, to ensure consistant movement, as ray-tracing
+        // to movement speeds, to ensure consistent movement, as ray-tracing
 		// is non-deterministic
 		tp2 = chrono::system_clock::now();
 		chrono::duration<float> elapsedTime = tp2 - tp1;
@@ -94,6 +95,7 @@ int main()
 			}
 		}
 
+        // Ray casting and rendering loop
 		for (int x = 0; x < ScreenWidth; x++)
 		{
 			// For each column, calculate the projected ray angle into world space
@@ -125,7 +127,7 @@ int main()
 				}
 				else
 				{
-					// Ray is inbounds so test to see if the ray cell is a wall block
+                    // Ray is in bounds so test to see if the ray cell is a wall block
 					if (map.c_str()[testX * MapWidth + testY] == '#')
 					{
 						// Ray has hit wall
@@ -153,7 +155,7 @@ int main()
 						}
 
 						// Sort Pairs from closest to farthest
-						sort(p.begin(), p.end(), [](const pair<float, float>& left, const pair<float, float>& right) {return left.first < right.first; });
+                        sort(p.begin(), p.end(), [](const pair<float, float>& left, const pair<float, float>& right) { return left.first < right.first; });
 
 						// First two/three are closest (we will never see all four)
 						float bound = 0.005f;
@@ -167,7 +169,7 @@ int main()
 			int ceiling = (int)((float)(ScreenHeight / 2.0f) - (float)(ScreenHeight / distanceToWall));
 			int floor = ScreenHeight - ceiling;
 
-			// Shader walls based on distance
+            // Walls shading based on distance
 			short shade = ' ';
 			if (distanceToWall <= Depth / 4.0f)
 				shade = 0x2588;	// Very close	
@@ -183,16 +185,17 @@ int main()
 			if (boundary)
 				shade = '|'; // Black it out
 
+            // Rendering the wall and floor
 			for (int y = 0; y < ScreenHeight; y++)
 			{
 				// Each Row
 				if (y <= ceiling)
-					screen[y * ScreenWidth + x] = ' ';
+                    screen[y * ScreenWidth + x] = ' ';  // Above the ceiling
 				else if (y > ceiling && y <= floor)
-					screen[y * ScreenWidth + x] = shade;
-				else // Floor
+                    screen[y * ScreenWidth + x] = shade;  // Wall
+                else
 				{
-					// Shade floor based on distance
+                    // Floor shading based on distance
 					float b = 1.0f - (((float)y - ScreenHeight / 2.0f) / ((float)ScreenHeight / 2.0f));
 					if (b < 0.25)
 						shade = '#';
@@ -204,7 +207,7 @@ int main()
 						shade = '-';
 					else
 						shade = ' ';
-					screen[y * ScreenWidth + x] = shade;
+                    screen[y * ScreenWidth + x] = shade;  // Floor
 				}
 			}
 		}
@@ -220,7 +223,7 @@ int main()
 				screen[(ny + 1) * ScreenWidth + nx] = map[ny * MapWidth + nx];
 			}
 		}
-		screen[((int)PlayerX + 1) * ScreenWidth + (int)PlayerY] = 'P';
+        screen[((int)PlayerX + 1) * ScreenWidth + (int)PlayerY] = 'P';  // Display player position
 
 		// Display Frame
 		screen[ScreenWidth * ScreenHeight - 1] = '\0';
@@ -230,6 +233,7 @@ int main()
 	return 0;
 }
 
+// Function to update the console size based on the current window size
 void UpdateConsoleSize()
 {
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
