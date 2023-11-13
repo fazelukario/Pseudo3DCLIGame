@@ -54,18 +54,23 @@ int main()
 
 	while (1)
 	{
+		// We'll need time differential per frame to calculate modification
+		// to movement speeds, to ensure consistant movement, as ray-tracing
+		// is non-deterministic
 		tp2 = chrono::system_clock::now();
 		chrono::duration<float> elapsedTime = tp2 - tp1;
 		tp1 = tp2;
 		float fElapsedTime = elapsedTime.count();
 
-
+		// Handle CCW Rotation
 		if (GetAsyncKeyState((unsigned short)'A') & 0x8000)
 			PlayerA -= (Speed * 0.75f) * fElapsedTime;
 
+		// Handle CW Rotation
 		if (GetAsyncKeyState((unsigned short)'D') & 0x8000)
 			PlayerA += (Speed * 0.75f) * fElapsedTime;
 
+		// Handle Forwards movement & collision
 		if (GetAsyncKeyState((unsigned short)'W') & 0x8000)
 		{
 			PlayerX += sinf(PlayerA) * Speed * fElapsedTime;
@@ -77,6 +82,7 @@ int main()
 			}
 		}
 
+		// Handle backwards movement & collision
 		if (GetAsyncKeyState((unsigned short)'S') & 0x8000)
 		{
 			PlayerX -= sinf(PlayerA) * Speed * fElapsedTime;
@@ -90,42 +96,54 @@ int main()
 
 		for (int x = 0; x < ScreenWidth; x++)
 		{
+			// For each column, calculate the projected ray angle into world space
 			float rayAngle = (PlayerA - FOV / 2.0f) + ((float)x / (float)ScreenWidth) * FOV;
 
 			// Find distance to wall
-			float stepSize = 0.1f;									
+			float stepSize = 0.1f;			// Increment size for ray casting, decrease to increase resolution
 			float distanceToWall = 0.0f;
 
-			bool hitWall = false;
-			bool boundary = false;
+			bool hitWall = false;	// Set when ray hits wall block
+			bool boundary = false;	// Set when ray hits boundary between two wall blocks
 
-			float eyeX = sinf(rayAngle);
+			float eyeX = sinf(rayAngle); // Unit vector for ray in player space
 			float eyeY = cosf(rayAngle);
 
+			// Incrementally cast ray from player, along ray angle, testing for 
+			// intersection with a block
 			while (!hitWall && distanceToWall < Depth)
 			{
 				distanceToWall += stepSize;
 				int testX = (int)(PlayerX + eyeX * distanceToWall);
 				int testY = (int)(PlayerY + eyeY * distanceToWall);
 
+				// Test if ray is out of bounds
 				if (testX < 0 || testX >= MapWidth || testY < 0 || testY >= MapHeight)
 				{
-					hitWall = true;
+					hitWall = true;			// Just set distance to maximum depth
 					distanceToWall = Depth;
 				}
 				else
 				{
+					// Ray is inbounds so test to see if the ray cell is a wall block
 					if (map.c_str()[testX * MapWidth + testY] == '#')
 					{
 						// Ray has hit wall
 						hitWall = true;
 
+						// To highlight tile boundaries, cast a ray from each corner
+						// of the tile, to the player. The more coincident this ray
+						// is to the rendering ray, the closer we are to a tile 
+						// boundary, which we'll shade to add detail to the walls
 						vector<pair<float, float>> p;
 
+						// Test each corner of hit tile, storing the distance from
+						// the player, and the calculated dot product of the two rays
 						for (int tx = 0; tx < 2; tx++)
 						{
 							for (int ty = 0; ty < 2; ty++)
 							{
+								// Angle of corner to eye
 								float vy = (float)testY + ty - PlayerY;
 								float vx = (float)testX + tx - PlayerX;
 								float d = sqrt(vx * vx + vy * vy);
@@ -137,6 +155,7 @@ int main()
 						// Sort Pairs from closest to farthest
 						sort(p.begin(), p.end(), [](const pair<float, float>& left, const pair<float, float>& right) {return left.first < right.first; });
 
+						// First two/three are closest (we will never see all four)
 						float bound = 0.005f;
 						if (acos(p.at(0).second) < bound) boundary = true;
 						if (acos(p.at(1).second) < bound) boundary = true;
