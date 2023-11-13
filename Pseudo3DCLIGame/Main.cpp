@@ -18,8 +18,8 @@ int ScreenHeight = 40;			// Console Screen Size Y (rows)
 int MapWidth = 0;				// World Dimensions
 int MapHeight = 0;
 
-float PlayerX = 14.7f;			// Player Start Position
-float PlayerY = 5.09f;
+float PlayerX = 1.0f;			// Player Start Position
+float PlayerY = 1.0f;
 float PlayerA = 0.0f;			// Player Start Rotation
 float FOV = 3.14159f / 4.0f;	// Field of View
 float Depth = 16.0f;			// Maximum rendering distance
@@ -43,12 +43,29 @@ int main()
 	// Create Map of world space # = wall block, . = space
 	wifstream file(mapFileName);
 	wstring map, line;
+	int lineIndex = 0;
+	float mapConfig[6];
 	while (getline(file, line))
 	{
-		map += line;
-		MapHeight++;
+		if (lineIndex < 6)
+		{
+			mapConfig[lineIndex] = stof(line);
+			lineIndex++;
+		}
+		else
+		{
+			map += line;
+			MapHeight++;
+		}
 	}
 	MapWidth = (int)(line.length());
+
+	PlayerX = mapConfig[0];
+	PlayerY = mapConfig[1];
+	PlayerA = mapConfig[2];
+	FOV = 3.14159f / mapConfig[3];
+	Depth = mapConfig[4];
+	Speed = mapConfig[5];
 
 	auto tp1 = chrono::system_clock::now();
 	auto tp2 = chrono::system_clock::now();
