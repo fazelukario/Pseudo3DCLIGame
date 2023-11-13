@@ -3,6 +3,8 @@
 #include <utility>
 #include <algorithm>
 #include <chrono>
+#include <fstream>
+#include <string>
 #include <stdio.h>
 #include <Windows.h>
 
@@ -12,8 +14,8 @@ void UpdateConsoleSize();
 
 int ScreenWidth = 120;			// Console Screen Size X (columns)
 int ScreenHeight = 40;			// Console Screen Size Y (rows)
-int MapWidth = 16;				// World Dimensions
-int MapHeight = 16;
+int MapWidth = 0;				// World Dimensions
+int MapHeight = 0;
 
 float PlayerX = 14.7f;			// Player Start Position
 float PlayerY = 5.09f;
@@ -24,6 +26,11 @@ float Speed = 5.0f;				// Walking Speed
 
 int main()
 {
+	string mapFileName;
+	cout << "Enter the name of the map file: ";
+	cin >> mapFileName;
+	system("cls");
+
 	UpdateConsoleSize();
 
 	// Create Screen Buffer
@@ -33,23 +40,14 @@ int main()
 	DWORD bytesWritten = 0;
 
 	// Create Map of world space # = wall block, . = space
-	wstring map;
-	map += L"################";
-	map += L"#..............#";
-	map += L"###.....########";
-	map += L"#..............#";
-	map += L"#......##......#";
-	map += L"#......##......#";
-	map += L"#..............#";
-	map += L"###...........##";
-	map += L"##.............#";
-	map += L"#......####..###";
-	map += L"#......#.......#";
-	map += L"#......#.......#";
-	map += L"#..............#";
-	map += L"#......#########";
-	map += L"#..............#";
-	map += L"################";
+	wifstream file(mapFileName);
+	wstring map, line;
+	while (getline(file, line))
+	{
+		map += line;
+		MapHeight++;
+	}
+	MapWidth = (int)(line.length());
 
 	auto tp1 = chrono::system_clock::now();
 	auto tp2 = chrono::system_clock::now();
