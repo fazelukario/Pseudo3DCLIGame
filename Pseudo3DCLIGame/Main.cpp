@@ -10,7 +10,7 @@
 
 using namespace std;
 
-void UpdateConsoleSize();  // Function prototype for updating console size
+void UpdateConsoleSize();	// Function prototype for updating console size
 
 // Variables to define the initial state of the game and player
 int ScreenWidth = 120;			// Console Screen Size X (columns)
@@ -30,9 +30,9 @@ int main()
 	string mapFileName;
 	cout << "Enter the name of the map file: ";
 	cin >> mapFileName;
-    system("cls");  // Clear the console
+    system("cls");	// Clear the console
 
-    UpdateConsoleSize();  // Set initial console size
+    UpdateConsoleSize();	// Set initial console size
 
 	// Create Screen Buffer
 	wchar_t* screen = new wchar_t[ScreenWidth * ScreenHeight];
@@ -108,7 +108,7 @@ int main()
 			bool hitWall = false;	// Set when ray hits wall block
 			bool boundary = false;	// Set when ray hits boundary between two wall blocks
 
-			float eyeX = sinf(rayAngle); // Unit vector for ray in player space
+			float eyeX = sinf(rayAngle);	// Unit vector for ray in player space
 			float eyeY = cosf(rayAngle);
 
 			// Incrementally cast ray from player, along ray angle, testing for 
@@ -180,19 +180,19 @@ int main()
 			else if (distanceToWall < Depth)
 				shade = 0x2591;
 			else
-				shade = ' '; // Too far away
+				shade = ' ';	// Too far away
 
 			if (boundary)
-				shade = '|'; // Black it out
+				shade = '|';	// Black it out
 
             // Rendering the wall and floor
 			for (int y = 0; y < ScreenHeight; y++)
 			{
 				// Each Row
 				if (y <= ceiling)
-                    screen[y * ScreenWidth + x] = ' ';  // Above the ceiling
+                    screen[y * ScreenWidth + x] = ' ';	// Above the ceiling
 				else if (y > ceiling && y <= floor)
-                    screen[y * ScreenWidth + x] = shade;  // Wall
+                    screen[y * ScreenWidth + x] = shade;	// Wall
                 else
 				{
                     // Floor shading based on distance
@@ -207,7 +207,7 @@ int main()
 						shade = '-';
 					else
 						shade = ' ';
-                    screen[y * ScreenWidth + x] = shade;  // Floor
+                    screen[y * ScreenWidth + x] = shade;	// Floor
 				}
 			}
 		}
@@ -223,7 +223,7 @@ int main()
 				screen[(ny + 1) * ScreenWidth + nx] = map[ny * MapWidth + nx];
 			}
 		}
-        screen[((int)PlayerX + 1) * ScreenWidth + (int)PlayerY] = 'P';  // Display player position
+        screen[((int)PlayerX + 1) * ScreenWidth + (int)PlayerY] = 'P';	// Display player position
 
 		// Display Frame
 		screen[ScreenWidth * ScreenHeight - 1] = '\0';
