@@ -44,7 +44,7 @@ int main()
 	wifstream file(mapFileName);
 	wstring map, line;
 	int lineIndex = 0;
-	float mapConfig[6];
+	float mapConfig[6] = { 1.0f, 1.0f, 0.0f, 4.0f, 16.0f, 5.0f };
 	while (getline(file, line))
 	{
 		if (lineIndex < 6)
