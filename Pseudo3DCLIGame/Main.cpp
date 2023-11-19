@@ -47,7 +47,7 @@ int main()
 	float mapConfig[6] = { 1.0f, 1.0f, 0.0f, 4.0f, 16.0f, 5.0f };
 	while (getline(file, line))
 	{
-		if (lineIndex < 6)
+		if ((lineIndex < 6) && (line.find_first_of('#') == -1))
 		{
 			mapConfig[lineIndex] = stof(line);
 			lineIndex++;
