@@ -2,10 +2,10 @@
 #include <chrono>
 #include <fstream>
 #include <iostream>
-#include <stdio.h>
 #include <string>
 #include <utility>
 #include <vector>
+#include <stdio.h>
 #include <Windows.h>
 
 using namespace std;
