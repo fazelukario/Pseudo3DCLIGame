@@ -1,11 +1,11 @@
-#include <iostream>
-#include <vector>
-#include <utility>
 #include <algorithm>
 #include <chrono>
 #include <fstream>
-#include <string>
+#include <iostream>
 #include <stdio.h>
+#include <string>
+#include <utility>
+#include <vector>
 #include <Windows.h>
 
 using namespace std;
