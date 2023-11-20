@@ -176,8 +176,10 @@ int main()
 
 						// First two/three are closest (we will never see all four)
 						float bound = 0.005f;
-						if (acos(p.at(0).second) < bound) boundary = true;
-						if (acos(p.at(1).second) < bound) boundary = true;
+						if (acos(p.at(0).second) < bound)
+							boundary = true;
+						if (acos(p.at(1).second) < bound)
+							boundary = true;
 					}
 				}
 			}
