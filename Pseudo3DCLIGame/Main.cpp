@@ -235,7 +235,7 @@ int main()
 		// Display Map
 		for (int nx = 0; nx < MapWidth; nx++)
 		{
-			for (int ny = 0; ny < MapWidth; ny++)
+			for (int ny = 0; ny < MapHeight; ny++)
 			{
 				screen[(ny + 1) * ScreenWidth + nx] = map[ny * MapWidth + nx];
 			}
