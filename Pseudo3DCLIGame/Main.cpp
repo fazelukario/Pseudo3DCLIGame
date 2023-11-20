@@ -67,6 +67,12 @@ int main()
 	Depth = mapConfig[4];
 	Speed = mapConfig[5];
 
+	if (MapWidth != MapHeight)
+	{
+		cout << "Map is not square!" << endl;
+		return 1;
+	}
+
 	auto tp1 = chrono::system_clock::now();
 	auto tp2 = chrono::system_clock::now();
 
