@@ -41,11 +41,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [windows-latest, windows-2022, windows-2019]
-        include:
-        - language: c-cpp
-          build-mode: autobuild
-        - language: actions
-          build-mode: none
+        language: ['c-cpp', 'actions']
         # CodeQL supports the following values keywords for 'language': 'c-cpp', 'csharp', 'go', 'java-kotlin', 'javascript-typescript', 'python', 'ruby', 'swift'
         # Use `c-cpp` to analyze code written in C, C++ or both
         # Use 'java-kotlin' to analyze code written in Java, Kotlin or both
@@ -63,7 +59,7 @@ jobs:
       uses: github/codeql-action/init@v3
       with:
         languages: ${{ matrix.language }}
-        build-mode: ${{ matrix.build-mode }}
+        build-mode: ${{ (matrix.language == 'actions' && 'none') || 'autobuild' }}
         # If you wish to specify custom queries, you can do so here or in a config file.
         # By default, queries listed here will override any specified in a config file.
         # Prefix the list here with "+" to use these queries and those in the config file.
