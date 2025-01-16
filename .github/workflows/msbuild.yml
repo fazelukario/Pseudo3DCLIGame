@@ -29,7 +29,16 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Add MSBuild to PATH
-      uses: microsoft/setup-msbuild@v1.3.1
+      uses: microsoft/setup-msbuild@v2
+      # with:
+        # Folder location of where vswhere.exe is located if a self-hosted agent
+        # vswhere-path: # optional
+        # Version of Visual Studio to search; defaults to latest if not specified
+        # vs-version: # optional
+        # Enable searching for pre-release versions of Visual Studio/MSBuild
+        # vs-prerelease: # optional
+        # The preferred processor architecture of MSBuild. Can be either "x86", "x64", or "arm64". "x64" is only available from Visual Studio version 17.0 and later.
+        # msbuild-architecture: # optional, default is x86
 
     - name: Restore NuGet packages
       working-directory: ${{ env.GITHUB_WORKSPACE }}
@@ -42,7 +51,7 @@ jobs:
       run: msbuild /m /p:Configuration=${{ matrix.configuration }} /p:Platform=${{ matrix.platform }} /p:PlatformToolset=${{ (matrix.os == 'windows-latest' || matrix.os == 'windows-2022') && '"v143"' || '"v142"' }} ${{ env.SOLUTION_FILE_PATH }}
 
     - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         # Artifact name
         name: ${{ vars.REPOSITORY_NAME }}-build-${{ matrix.os }}-${{ matrix.configuration }}-${{ matrix.platform }}-${{ github.sha }} # optional, default is artifact
@@ -60,3 +69,12 @@ jobs:
         # Duration after which artifact will expire in days. 0 means using default retention.
         # Minimum 1 day. Maximum 90 days unless changed from the repository settings page.
         retention-days: 90 # optional
+
+        # The level of compression for Zlib to be applied to the artifact archive. The value can range from 0 to 9: - 0: No compression - 1: Best speed - 6: Default compression (same as GNU Gzip) - 9: Best compression Higher levels will result in better compression, but will take longer to complete. For large files that are not easily compressed, a value of 0 is recommended for significantly faster uploads.
+        # compression-level: 6 # optional, default is 6
+
+        # If true, an artifact with a matching name will be deleted before a new one is uploaded. If false, the action will fail if an artifact for the given name already exists. Does not fail if the artifact does not exist.
+        # overwrite: false # optional, default is false
+
+        # If true, hidden files will be included in the artifact. If false, hidden files will be excluded from the artifact.
+        # include-hidden-files: false # optional, default is false
